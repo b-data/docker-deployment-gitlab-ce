@@ -8,8 +8,8 @@ services:
     networks:
       - default
       - webproxy
-    #ports:
-    #  - "22:22"
+    ports:
+      - "${GITLAB_SHELL_SSH_PORT:-10022}:22"
     volumes:
       - ./gitlab/config:/etc/gitlab
       - ./gitlab/logs:/var/log/gitlab
@@ -61,6 +61,9 @@ services:
         #### Incoming Mailbox Settings
         #gitlab_rails['incoming_email_mailbox_name'] = "inbox"
         #gitlab_rails['incoming_email_idle_timeout'] = 60
+
+        ### GitLab Shell settings for GitLab
+        gitlab_rails['gitlab_shell_ssh_port'] = ${GITLAB_SHELL_SSH_PORT:-10022}
 
         ### GitLab application settings
         gitlab_rails['initial_root_password'] = "${GL_INITIAL_ROOT_PASSWORD:-password}"

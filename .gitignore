@@ -13,5 +13,3 @@ docker-compose.yml
 
 gitlab/**
 gitlab-runner/**
-
-!.keep

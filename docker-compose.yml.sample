@@ -1,0 +1,181 @@
+version: "3"
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce
+    container_name: gitlab
+    restart: always
+    networks:
+      - default
+      - webproxy
+    ports:
+      - "${GITLAB_SHELL_SSH_PORT:-10022}:22"
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=webproxy
+      - traefik.http.services.gitlab.loadbalancer.server.port=80
+      - traefik.http.routers.gitlab.entrypoints=web
+      - traefik.http.routers.gitlab.rule=Host(`gitlab.${GL_DOMAIN}`,`mattermost.${GL_DOMAIN}`,`registry.gitlab.${GL_DOMAIN}`)
+      - traefik.http.routers.gitlab.middlewares=http2https@file
+      #- traefik.http.routers.gitlab.service=gitlab
+      - traefik.http.routers.gitlab-sec.entrypoints=websecure
+      - traefik.http.routers.gitlab-sec.rule=Host(`gitlab.${GL_DOMAIN}`,`mattermost.${GL_DOMAIN}`,`registry.gitlab.${GL_DOMAIN}`)
+      - traefik.http.routers.gitlab-sec.middlewares=sts@file
+      #- traefik.http.routers.gitlab-sec.service=gitlab
+      - traefik.http.routers.gitlab-sec.tls.certresolver=${GL_CERTRESOLVER_NAME}
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        ## GitLab URL
+        external_url 'https://gitlab.${GL_DOMAIN}'
+
+        ## gitlab.yml configuration
+        gitlab_rails['time_zone'] = '${GL_TZ:-UTC}'
+
+        ### Email Settings
+        gitlab_rails['gitlab_email_enabled'] = true
+        gitlab_rails['gitlab_email_from'] = 'gitlab@${GL_DOMAIN}'
+        gitlab_rails['gitlab_email_display_name'] = 'GitLab'
+        gitlab_rails['gitlab_email_reply_to'] = 'noreply@${GL_DOMAIN}'
+
+        ### Default project feature settings
+        gitlab_rails['gitlab_default_projects_features_builds'] = false
+        gitlab_rails['gitlab_default_projects_features_container_registry'] = false
+
+        ### Reply by email
+        #gitlab_rails['incoming_email_enabled'] = true
+        #### Incoming Email Address
+        #gitlab_rails['incoming_email_address'] = "gitlab-incoming+%{key}@gmail.com"
+        #### Email account username
+        #gitlab_rails['incoming_email_email'] = "gitlab-incoming@gmail.com"
+        #### Email account password
+        #gitlab_rails['incoming_email_password'] = "[REDACTED]"
+        #### IMAP Settings
+        #gitlab_rails['incoming_email_host'] = "imap.gmail.com"
+        #gitlab_rails['incoming_email_port'] = 993
+        #gitlab_rails['incoming_email_ssl'] = true
+        #gitlab_rails['incoming_email_start_tls'] = false
+        #### Incoming Mailbox Settings
+        #gitlab_rails['incoming_email_mailbox_name'] = "inbox"
+        #gitlab_rails['incoming_email_idle_timeout'] = 60
+
+        ### GitLab Shell settings for GitLab
+        gitlab_rails['gitlab_shell_ssh_port'] = ${GITLAB_SHELL_SSH_PORT:-10022}
+
+        ### GitLab application settings
+        gitlab_rails['initial_root_password'] = "${GL_INITIAL_ROOT_PASSWORD:-password}"
+        #gitlab_rails['initial_shared_runners_registration_token'] = "${GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN}"
+
+        ### GitLab email server settings
+        gitlab_rails['smtp_enable'] = true
+        gitlab_rails['smtp_address'] = "${GL_SMTP_ADDRESS:-smtp-gitlab}"
+        gitlab_rails['smtp_port'] = ${GL_SMTP_PORT:-8025}
+        #gitlab_rails['smtp_user_name'] = "gitlab@${GL_DOMAIN}"
+        #gitlab_rails['smtp_password'] = "${GL_SMTP_PASSWORD}"
+        #gitlab_rails['smtp_domain'] = "${GL_DOMAIN}"
+        #gitlab_rails['smtp_authentication'] = "login"
+        #gitlab_rails['smtp_enable_starttls_auto'] = true
+        #gitlab_rails['smtp_tls'] = false
+        #gitlab_rails['smtp_openssl_verify_mode'] = 'none'
+
+        ## Container Registry settings
+        registry_external_url 'https://registry.gitlab.${GL_DOMAIN}'
+
+        ### Settings used by GitLab application
+        gitlab_rails['registry_enabled'] = true
+
+        ## GitLab NGINX
+        nginx['listen_port'] = 80
+        nginx['listen_https'] = false
+        nginx['proxy_set_headers'] = {
+          "Host" => "$$http_host_with_default",
+          "X-Real-IP" => "$$remote_addr",
+          "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+          "X-Forwarded-Proto" => "https",
+          "X-Forwarded-Ssl" => "on"
+        }
+
+        ## GitLab Mattermost
+        mattermost_external_url 'https://mattermost.${GL_DOMAIN}'
+        mattermost['enable'] = true
+        mattermost['team_site_name'] = "GitLab Mattermost"
+        mattermost['gitlab_enable'] = true
+        mattermost['gitlab_id'] = "${MM_GITLAB_APPLICATION_ID}"
+        mattermost['gitlab_secret'] = "${MM_GITLAB_SECRET}"
+        mattermost['gitlab_auth_endpoint'] = "https://gitlab.${GL_DOMAIN}/oauth/authorize"
+        mattermost['gitlab_token_endpoint'] = "https://gitlab.${GL_DOMAIN}/oauth/token"
+        mattermost['gitlab_user_api_endpoint'] = "https://gitlab.${GL_DOMAIN}/api/v4/user"
+        mattermost['env'] = {
+                            'MM_SERVICESETTINGS_SITEURL' => 'https://mattermost.${GL_DOMAIN}',
+                            'MM_SERVICESETTINGS_ENABLEINCOMINGWEBHOOKS' => 'true',
+                            'MM_SERVICESETTINGS_ENABLEPOSTUSERNAMEOVERRIDE' => 'true',
+                            'MM_SERVICESETTINGS_ENABLEPOSTICONOVERRIDE' => 'true',
+                            'MM_SERVICESETTINGS_ENABLELINKPREVIEWS' => 'true',
+                            'MM_TEAMSETTINGS_TEAMMATENAMEDISPLAY' => 'full_name',
+                            'MM_FILESETTINGS_ENABLEPUBLICLINK' => 'true',
+                            #'MM_FILESETTINGS_PUBLICLINKSALT' => '${MM_PUBLIC_LINK_SALT}',
+                            'MM_EMAILSETTINGS_ENABLESIGNUPWITHEMAIL' => 'false',
+                            'MM_EMAILSETTINGS_ENABLESIGNINWITHEMAIL' => 'false',
+                            'MM_EMAILSETTINGS_ENABLESIGNINWITHUSERNAME' => 'false',
+                            'MM_EMAILSETTINGS_SENDEMAILNOTIFICATIONS' => 'true',
+                            'MM_EMAILSETTINGS_FEEDBACKNAME' => 'GitLab Mattermost Notification',
+                            'MM_EMAILSETTINGS_FEEDBACKEMAIL' => 'gitlab@${GL_DOMAIN}',
+                            'MM_EMAILSETTINGS_REPLYTOADDRESS' => 'noreply@${GL_DOMAIN}',
+                            #'MM_EMAILSETTINGS_FEEDBACKORGANIZATION' => '© Company, Address No., Zip City',
+                            #'MM_EMAILSETTINGS_ENABLESMTPAUTH' => 'true',
+                            #'MM_EMAILSETTINGS_SMTPUSERNAME' => 'gitlab@${GL_DOMAIN}',
+                            #'MM_EMAILSETTINGS_SMTPPASSWORD' => '${GL_SMTP_PASSWORD}',
+                            'MM_EMAILSETTINGS_SMTPSERVER' => '${GL_SMTP_ADDRESS:-smtp-gitlab}',
+                            'MM_EMAILSETTINGS_SMTPPORT' => '${GL_SMTP_PORT:-8025}',
+                            #'MM_EMAILSETTINGS_CONNECTIONSECURITY' => 'STARTTLS',
+                            'MM_SUPPORTSETTINGS_SUPPORTEMAIL' => 'support@${GL_DOMAIN}',
+                            'MM_PLUGINSETTINGS_ENABLEUPLOADS' => 'true',
+                            }
+
+        ## Mattermost NGINX
+        mattermost_nginx['enable'] = true
+        mattermost_nginx['listen_port'] = 80
+        mattermost_nginx['listen_https'] = false
+        mattermost_nginx['proxy_set_headers'] = {
+          "Host" => "$$http_host",
+          "X-Real-IP" => "$$remote_addr",
+          "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+          "X-Forwarded-Proto" => "https",
+          "X-Forwarded-Ssl" => "on"
+        }
+
+        ## Registry NGINX
+        registry_nginx['enable'] = true
+        registry_nginx['listen_port'] = 80
+        registry_nginx['listen_https'] = false
+        registry_nginx['proxy_set_headers'] = {
+          "Host" => "$$http_host",
+          "X-Real-IP" => "$$remote_addr",
+          "X-Forwarded-For" => "$$proxy_add_x_forwarded_for",
+          "X-Forwarded-Proto" => "https",
+          "X-Forwarded-Ssl" => "on"
+        }
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner
+    container_name: gitlab-runner
+    restart: always
+    volumes:
+      - ./gitlab-runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  smtp-gitlab:
+    image: devture/exim-relay:4.92.2-r0-0
+    container_name: smtp-gitlab
+    user: 100:101
+    restart: always
+
+networks:
+  default:
+    external:
+      name: gitlab
+  webproxy:
+    external: true

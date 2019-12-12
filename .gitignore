@@ -5,4 +5,11 @@
 .RData
 .Ruserdata
 
+.env
+docker-compose.yml
+
+*.html
 *.Rproj
+
+gitlab/**
+gitlab-runner/**

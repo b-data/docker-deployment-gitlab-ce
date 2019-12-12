@@ -13,7 +13,7 @@ services in a single container.
     *  Disabled: LDAP, Reply by email and Gitlab Pages
     *  Includes [gitlab-runner](https://hub.docker.com/r/gitlab/gitlab-runner)
        to register shared Runners.
-*  Pre-configured to run at a subdomain of your **own domain**:
+*  Pre-configured to run at subdomains of your **own domain**:
     *  GitLab: gitlab.mydomain.com
     *  Mattermost: mattermost.mydomain.com
     *  Registry: registry.gitlab.mydomain.com
@@ -30,10 +30,11 @@ services in a single container.
 
 ## Prerequisites
 
-The following [Docker Deployments](https://gitlab.b-data.ch/docker/deployments)
-are required:
+The following is required:
 
-*  [træfik](https://gitlab.b-data.ch/docker/deployments/traefik)
+*  A [Docker Deployment](https://gitlab.b-data.ch/docker/deployments) of [Træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
+*  DNS records for all subdomains pointing to this host.
+*  Allowing connections on port 10022 to access GitLab shell (Git over SSH).
 
 ## Setup
 
@@ -44,13 +45,13 @@ are required:
 1.  Make a copy of '[.env.sample](.env.sample)' and rename it to '.env'.
 1.  Update at least environment variables `GL_DOMAIN` and
     `GL_CERTRESOLVER_NAME` in '.env':
-    *  Replace `mydomain.com` with your **own domain**.
-    *  Replace `mydomain-com` with a valid certificate resolvers name of
-       [træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
+    *  Replace `mydomain.com` with your **own domain** that serves the
+       subdomains.
+    *  Replace `mydomain-com` with a valid certificate resolvers name of Træfik.
 1.  Optional: Set these environment variables:
     *  `GL_TZ`: A valid [tz database time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
         (default: `UTC`)
-    *  `GITLAB_SHELL_SSH_PORT`: GitLab Shell SSH port (default: 10022)
+    *  `GITLAB_SHELL_SSH_PORT`: GitLab Shell SSH port (default: `10022`)
     *  `GL_INITIAL_ROOT_PASSWORD`: Initial default admin password (default:
         `password`)
     *  `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN`: Initial shared runners
@@ -69,9 +70,9 @@ are required:
         ```
 1.  Make a copy of '[docker-compose.yml.sample](docker-compose.yml.sample)' and
     rename it to 'docker-compose.yml'.
-    *  Uncomment line 67 if you have set
+    *  Uncomment line 70 if you have set
        `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN` in step 4.
-    *  Uncomment line 116 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
+    *  Uncomment line 119 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
        step 4.
 1.  Start the container in detached mode:  
     ```bash
@@ -117,7 +118,7 @@ Add Mattermost to Applications:
     docker-compose up -d
     ```
 1. Wait until GitLab container is ready again.
-1. Log into https://mattermost.mydomain.com using "GitLab Single Sign-On"
+1. Log into https://mattermost.mydomain.com using "GitLab Single Sign-On".
 
 ## Register shared Runners
 

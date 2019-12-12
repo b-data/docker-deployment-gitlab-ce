@@ -6,3 +6,8 @@
 .Ruserdata
 
 *.Rproj
+
+gitlab/**
+gitlab-runner/**
+
+!.keep

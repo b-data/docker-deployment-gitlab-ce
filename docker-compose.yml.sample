@@ -165,7 +165,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   smtp-gitlab:
-    image: devture/exim-relay
+    image: devture/exim-relay:4.92.2-r0-0
     container_name: smtp-gitlab
     user: 100:101
     restart: always

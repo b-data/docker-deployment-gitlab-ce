@@ -26,15 +26,25 @@ services in a single container.
 **About GitLab**
 
 *  Homepage: https://about.gitlab.com
-*  Documentation: https://docs.gitlab.com/omnibus/
+*  Documentation: https://docs.gitlab.com/omnibus/docker/
 
 ## Prerequisites
 
 The following is required:
 
-*  A [Docker Deployment](https://gitlab.b-data.ch/docker/deployments) of [Træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
+*  A [Docker Deployment](https://gitlab.b-data.ch/docker/deployments) of
+   [Træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
 *  DNS records for all subdomains pointing to this host.
 *  Allowing connections on port 10022 to access GitLab shell (Git over SSH).
+
+[Hardware requirements](https://docs.gitlab.com/ee/install/requirements.html#hardware-requirements):
+
+*  **Storage:** As a _rule of thumb_ you should have at least as much free space as
+   all your repositories combined take up
+*  **CPU:** **4 cores** is the **recommended** minimum number of cores and supports
+   up to 500 users
+*  **Memory:** **4 GB RAM** is the **required** minimum memory size and supports up
+   to 500 users
 
 ## Setup
 
@@ -55,18 +65,18 @@ The following is required:
     *  `GL_INITIAL_ROOT_PASSWORD`: Initial default admin password (default:
         `password`)
     *  `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN`: Initial shared runners
-        registration token (default: disabled)  
+        registration token (default: set by GitLab)  
         Generate random registration token:  
         ```bash
-        tr -cd 'A-Za-z0-9' < /dev/urandom | fold -w 20 | head -n 1
+        LC_ALL=C tr -cd 'A-Za-z0-9' < /dev/urandom | fold -w 20 | head -n 1
         ```
     *  `GL_SMTP_PASSWORD`: SMTP server password (disabled)
-    *  `GL_SMTP_ADDRESS`: SMTP server address (default: `smtp-gitlab`)
+    *  `GL_SMTP_ADDRESS`: SMTP server address (default: `gitlab-smtp`)
     *  `GL_SMTP_PORT`: SMTP server port (default: `8025`)
-    *  `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (disabled)  
+    *  `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (default: set by GitLab)  
         Generate random salt:  
         ```bash
-        tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
+        LC_ALL=C tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
         ```
 1.  Make a copy of '[docker-compose.yml.sample](docker-compose.yml.sample)' and
     rename it to 'docker-compose.yml'.
@@ -103,6 +113,7 @@ Add Mattermost to Applications:
         https://mattermost.mydomain.com/signup/gitlab/complete
         https://mattermost.mydomain.com/login/gitlab/complete
         ```
+        → Replace `mydomain.com` with your own domain that serves the subdomains.
     *  Tick "Trusted"
     *  Scopes:
         *  Tick "api"
@@ -166,8 +177,10 @@ See also
 ### GitLab
 
 *  [Omnibus GitLab Docs](https://docs.gitlab.com/omnibus/)
-    *  [Setting up LDAP sign-in](https://docs.gitlab.com/omnibus/settings/ldap.html)
-    *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)
+    *  [Setting up LDAP sign-in](https://docs.gitlab.com/ce/administration/auth/ldap/index.html)
+    *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)  
+        → As long as you are using the exim-relay, emails will likely end up in
+        your spam folder!
     *  [Reply by email](https://docs.gitlab.com/ce/administration/reply_by_email.html)
     *  [GitLab Pages administration](https://docs.gitlab.com/ce/administration/pages/)
 *  [GitLab Runner Docs](https://docs.gitlab.com/runner/)

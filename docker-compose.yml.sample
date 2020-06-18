@@ -71,7 +71,7 @@ services:
 
         ### GitLab email server settings
         gitlab_rails['smtp_enable'] = true
-        gitlab_rails['smtp_address'] = "${GL_SMTP_ADDRESS:-smtp-gitlab}"
+        gitlab_rails['smtp_address'] = "${GL_SMTP_ADDRESS:-gitlab-smtp}"
         gitlab_rails['smtp_port'] = ${GL_SMTP_PORT:-8025}
         #gitlab_rails['smtp_user_name'] = "gitlab@${GL_DOMAIN}"
         #gitlab_rails['smtp_password'] = "${GL_SMTP_PASSWORD}"
@@ -128,7 +128,7 @@ services:
                             #'MM_EMAILSETTINGS_ENABLESMTPAUTH' => 'true',
                             #'MM_EMAILSETTINGS_SMTPUSERNAME' => 'gitlab@${GL_DOMAIN}',
                             #'MM_EMAILSETTINGS_SMTPPASSWORD' => '${GL_SMTP_PASSWORD}',
-                            'MM_EMAILSETTINGS_SMTPSERVER' => '${GL_SMTP_ADDRESS:-smtp-gitlab}',
+                            'MM_EMAILSETTINGS_SMTPSERVER' => '${GL_SMTP_ADDRESS:-gitlab-smtp}',
                             'MM_EMAILSETTINGS_SMTPPORT' => '${GL_SMTP_PORT:-8025}',
                             #'MM_EMAILSETTINGS_CONNECTIONSECURITY' => 'STARTTLS',
                             'MM_SUPPORTSETTINGS_SUPPORTEMAIL' => 'support@${GL_DOMAIN}',
@@ -167,9 +167,9 @@ services:
       - ./gitlab-runner/config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
 
-  smtp-gitlab:
+  gitlab-smtp:
     image: devture/exim-relay:4.92.2-r0-0
-    container_name: smtp-gitlab
+    container_name: gitlab-smtp
     user: 100:101
     restart: always
 

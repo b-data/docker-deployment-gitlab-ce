@@ -26,15 +26,25 @@ services in a single container.
 **About GitLab**
 
 *  Homepage: https://about.gitlab.com
-*  Documentation: https://docs.gitlab.com/omnibus/
+*  Documentation: https://docs.gitlab.com/omnibus/docker/
 
 ## Prerequisites
 
 The following is required:
 
-*  A [Docker Deployment](https://gitlab.b-data.ch/docker/deployments) of [Træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
+*  A [Docker Deployment](https://gitlab.b-data.ch/docker/deployments) of
+   [Træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
 *  DNS records for all subdomains pointing to this host.
 *  Allowing connections on port 10022 to access GitLab shell (Git over SSH).
+
+[Hardware requirements](https://docs.gitlab.com/ee/install/requirements.html#hardware-requirements):
+
+*  **Storage:** As a _rule of thumb_ you should have at least as much free space as
+   all your repositories combined take up
+*  **CPU:** **4 cores** is the **recommended** minimum number of cores and supports
+   up to 500 users
+*  **Memory:** **4 GB RAM** is the **required** minimum memory size and supports up
+   to 500 users
 
 ## Setup
 
@@ -58,7 +68,7 @@ The following is required:
         registration token (default: disabled)  
         Generate random registration token:  
         ```bash
-        tr -cd 'A-Za-z0-9' < /dev/urandom | fold -w 20 | head -n 1
+        LC_ALL=C tr -cd 'A-Za-z0-9' < /dev/urandom | fold -w 20 | head -n 1
         ```
     *  `GL_SMTP_PASSWORD`: SMTP server password (disabled)
     *  `GL_SMTP_ADDRESS`: SMTP server address (default: `smtp-gitlab`)
@@ -66,7 +76,7 @@ The following is required:
     *  `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (disabled)  
         Generate random salt:  
         ```bash
-        tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
+        LC_ALL=C tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
         ```
 1.  Make a copy of '[docker-compose.yml.sample](docker-compose.yml.sample)' and
     rename it to 'docker-compose.yml'.
@@ -166,7 +176,7 @@ See also
 ### GitLab
 
 *  [Omnibus GitLab Docs](https://docs.gitlab.com/omnibus/)
-    *  [Setting up LDAP sign-in](https://docs.gitlab.com/omnibus/settings/ldap.html)
+    *  [Setting up LDAP sign-in](https://docs.gitlab.com/ce/administration/auth/ldap/index.html)
     *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)
     *  [Reply by email](https://docs.gitlab.com/ce/administration/reply_by_email.html)
     *  [GitLab Pages administration](https://docs.gitlab.com/ce/administration/pages/)

@@ -65,15 +65,15 @@ The following is required:
     *  `GL_INITIAL_ROOT_PASSWORD`: Initial default admin password (default:
         `password`)
     *  `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN`: Initial shared runners
-        registration token (default: disabled)  
+        registration token (default: set by GitLab)  
         Generate random registration token:  
         ```bash
         LC_ALL=C tr -cd 'A-Za-z0-9' < /dev/urandom | fold -w 20 | head -n 1
         ```
     *  `GL_SMTP_PASSWORD`: SMTP server password (disabled)
-    *  `GL_SMTP_ADDRESS`: SMTP server address (default: `smtp-gitlab`)
+    *  `GL_SMTP_ADDRESS`: SMTP server address (default: `gitlab-smtp`)
     *  `GL_SMTP_PORT`: SMTP server port (default: `8025`)
-    *  `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (disabled)  
+    *  `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (default: set by GitLab)  
         Generate random salt:  
         ```bash
         LC_ALL=C tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
@@ -113,6 +113,7 @@ Add Mattermost to Applications:
         https://mattermost.mydomain.com/signup/gitlab/complete
         https://mattermost.mydomain.com/login/gitlab/complete
         ```
+        → Replace `mydomain.com` with your own domain that serves the subdomains.
     *  Tick "Trusted"
     *  Scopes:
         *  Tick "api"
@@ -177,7 +178,9 @@ See also
 
 *  [Omnibus GitLab Docs](https://docs.gitlab.com/omnibus/)
     *  [Setting up LDAP sign-in](https://docs.gitlab.com/ce/administration/auth/ldap/index.html)
-    *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)
+    *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)  
+        → As long as you are using the exim-relay, emails will likely end up in
+        your spam folder!
     *  [Reply by email](https://docs.gitlab.com/ce/administration/reply_by_email.html)
     *  [GitLab Pages administration](https://docs.gitlab.com/ce/administration/pages/)
 *  [GitLab Runner Docs](https://docs.gitlab.com/runner/)

@@ -1,6 +1,6 @@
 # GitLab Community Edition (CE)
 
-[This project](https://gitlab.b-data.ch/docker/deployments/gitlab-ce) serves as
+[This project](https://gitlab.com/b-data/docker/deployments/gitlab-ce) serves as
 a template to run [gitlab-ce](https://hub.docker.com/r/gitlab/gitlab-ce) in a
 docker container using docker-compose.
 
@@ -32,8 +32,8 @@ services in a single container.
 
 The following is required:
 
-*  A [Docker Deployment](https://gitlab.b-data.ch/docker/deployments) of
-   [Træfik](https://gitlab.b-data.ch/docker/deployments/traefik).
+*  A [Docker Deployment](https://gitlab.com/b-data/docker/deployments) of
+   [Træfik](https://gitlab.com/b-data/docker/deployments/traefik).
 *  DNS records for all subdomains pointing to this host.
 *  Allowing connections on port 10022 to access GitLab shell (Git over SSH).
 

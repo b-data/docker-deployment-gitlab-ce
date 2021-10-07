@@ -1,19 +1,18 @@
-version: "3"
+version: '3.8'
 
 services:
   gitlab:
     image: gitlab/gitlab-ce
-    container_name: gitlab
     restart: always
     networks:
-      - default
+      - vcs
       - webproxy
     ports:
       - "${GITLAB_SHELL_SSH_PORT:-10022}:22"
     volumes:
-      - ./gitlab/config:/etc/gitlab
-      - ./gitlab/logs:/var/log/gitlab
-      - ./gitlab/data:/var/opt/gitlab
+      - ${GL_HOME:-.}/gitlab/config:/etc/gitlab
+      - ${GL_HOME:-.}/gitlab/logs:/var/log/gitlab
+      - ${GL_HOME:-.}/gitlab/data:/var/opt/gitlab
     labels:
       - traefik.enable=true
       - traefik.docker.network=webproxy
@@ -161,21 +160,18 @@ services:
 
   gitlab-runner:
     image: gitlab/gitlab-runner
-    container_name: gitlab-runner
     restart: always
     volumes:
-      - ./gitlab-runner/config:/etc/gitlab-runner
+      - ${GL_HOME:-.}/gitlab-runner/config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
 
   gitlab-smtp:
     image: devture/exim-relay:4.92.2-r0-0
-    container_name: gitlab-smtp
     user: 100:101
     restart: always
 
 networks:
-  default:
-    external:
-      name: gitlab
+  vcs:
+    external: true
   webproxy:
     external: true

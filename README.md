@@ -48,17 +48,20 @@ The following is required:
 
 ## Setup
 
-1.  Create an external docker network named "gitlab":  
+1.  Create an external docker network named "vcs":  
     ```bash
-    docker network create gitlab
+    docker network create vcs
     ```
-1.  Make a copy of '[.env.sample](.env.sample)' and rename it to '.env'.
+1.  Make a copy of all `sample.` files:  
+    ```bash
+    for file in sample.*; do cp "$file" "${file#sample.}"; done;
+    ```
 1.  Update at least environment variables `GL_DOMAIN` and
     `GL_CERTRESOLVER_NAME` in '.env':
     *  Replace `mydomain.com` with your **own domain** that serves the
        subdomains.
     *  Replace `mydomain-com` with a valid certificate resolvers name of Træfik.
-1.  Optional: Set these environment variables:
+1.  Optional: Set these environment variables in '.env':
     *  `GL_TZ`: A valid [tz database time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
         (default: `UTC`)
     *  `GITLAB_SHELL_SSH_PORT`: GitLab Shell SSH port (default: `10022`)
@@ -78,11 +81,10 @@ The following is required:
         ```bash
         LC_ALL=C tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
         ```
-1.  Make a copy of '[docker-compose.yml.sample](docker-compose.yml.sample)' and
-    rename it to 'docker-compose.yml'.
-    *  Uncomment line 70 if you have set
+1.  Optional: Set these environment variables in 'docker-compose.yml':
+    *  Uncomment line 69 if you have set
        `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN` in step 4.
-    *  Uncomment line 119 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
+    *  Uncomment line 118 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
        step 4.
 1.  Start the container in detached mode:  
     ```bash
@@ -101,8 +103,23 @@ settings:
     *  Restricted visibility levels
 *  Admin Area > Settings > General > Sign-up restrictions:
     *  Sign-up enabled
+*  Admin Area > Settings > General > Sign-in restrictions > Email notification
+   for unknown sign-ins:
+    *  Notify users by email when sign-in location is not recognized
 *  Admin Area > Settings > Preferences > Localization:
     *  Default first day of the week
+
+Change the following
+settings:
+
+*  Admin Area > Settings > General > Third party offers:
+    *  Tick "Do not display offers from third parties within GitLab"
+*  Admin Area > Settings > Metrics and profiling > Usage statistics:
+    *  Untick "Enable usage ping"
+*  Admin Area > Settings > Network > Outbound requests:
+    *  Tick "Allow requests to the local network from web hooks and services"
+*  Admin Area > Settings > Preferences > Email:
+    *  Untick "Enable in-product marketing emails"
 
 Add Mattermost to Applications:
 
@@ -134,7 +151,7 @@ Add Mattermost to Applications:
 ## Register shared Runners
 
 ```shell
-docker exec -ti gitlab-runner bash -c "gitlab-runner register"
+docker exec -ti vcs_gitlab-runner_1 bash -c "gitlab-runner register"
 ```
 
 1.  Enter your GitLab instance URL:
@@ -181,13 +198,13 @@ See also
     *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)  
         → As long as you are using the exim-relay, emails will likely end up in
         your spam folder!
-    *  [Reply by email](https://docs.gitlab.com/ce/administration/reply_by_email.html)
-    *  [GitLab Pages administration](https://docs.gitlab.com/ce/administration/pages/)
+    *  [Reply by email](https://docs.gitlab.com/ee/administration/reply_by_email.html)
+    *  [GitLab Pages administration](https://docs.gitlab.com/ee/administration/pages/)
 *  [GitLab Runner Docs](https://docs.gitlab.com/runner/)
     *  [Advanced configuration](https://docs.gitlab.com/runner/configuration/advanced-configuration.html)
 
 ### Mattermost
 
 *  [Mattermost Overview](https://docs.mattermost.com/overview/index.html)
-    *  [User's Guide](https://docs.mattermost.com/guides/user.html)
-    *  [Administrator's Guide](https://docs.mattermost.com/guides/administrator.html)
+    *  [Administration Guide](https://docs.mattermost.com/guides/administration.html)
+    *  [User Guide](https://docs.mattermost.com/guides/channels.html)

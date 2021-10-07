@@ -1,4 +1,4 @@
 sources: 
   - file_name: gitlab.rb.template
     url: https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/files/gitlab-config-template/gitlab.rb.template
-    date: 2020-06-18
+    date: 2021-10-07

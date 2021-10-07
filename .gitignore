@@ -80,4 +80,5 @@ $RECYCLE.BIN/
 docker-compose.yml
 
 gitlab/**
+gitlab-pages/**
 gitlab-runner/**

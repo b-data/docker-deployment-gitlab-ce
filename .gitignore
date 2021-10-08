@@ -79,6 +79,9 @@ $RECYCLE.BIN/
 .env
 docker-compose.yml
 
+custom/**
 gitlab/**
 gitlab-pages/**
 gitlab-runner/**
+
+!.keep

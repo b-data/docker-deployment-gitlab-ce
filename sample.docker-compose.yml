@@ -113,6 +113,7 @@ services:
                             'MM_SERVICESETTINGS_ENABLEPOSTUSERNAMEOVERRIDE' => 'true',
                             'MM_SERVICESETTINGS_ENABLEPOSTICONOVERRIDE' => 'true',
                             'MM_SERVICESETTINGS_ENABLELINKPREVIEWS' => 'true',
+                            'MM_SERVICESETTINGS_ENABLEUSERACCESSTOKENS' => 'true',
                             'MM_TEAMSETTINGS_TEAMMATENAMEDISPLAY' => 'full_name',
                             'MM_FILESETTINGS_ENABLEPUBLICLINK' => 'true',
                             #'MM_FILESETTINGS_PUBLICLINKSALT' => '${MM_PUBLIC_LINK_SALT}',

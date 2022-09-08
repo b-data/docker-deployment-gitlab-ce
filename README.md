@@ -4,7 +4,7 @@
 
 [This project](https://gitlab.com/b-data/docker/deployments/gitlab-ce) serves as
 a template to run [gitlab-ce](https://hub.docker.com/r/gitlab/gitlab-ce) in a
-docker container using docker-compose.
+docker container using docker compose.
 
 The docker image is a monolithic image of GitLab running all the necessary
 services in a single container.
@@ -90,7 +90,7 @@ The following is required:
        step 4.
 1.  Start the container in detached mode:  
     ```bash
-    docker-compose up -d
+    docker compose up -d
     ```
 
 ### GitLab
@@ -145,7 +145,7 @@ Add Mattermost to Applications:
     *  `MM_GITLAB_SECRET`: "Secret" from GitLab
 1.  Reconfigure GitLab:  
     ```shell
-    docker-compose up -d
+    docker compose up -d
     ```
 1. Wait until GitLab container is ready again.
 1. Log into https://mattermost.mydomain.com using "GitLab Single Sign-On".

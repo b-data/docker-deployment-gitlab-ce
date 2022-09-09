@@ -65,7 +65,7 @@ The following is required:
     *  Replace `mydomain-com` with a valid certificate resolvers name of Træfik.
 1.  Optional: Set these environment variables in '.env':
     *  `GL_TZ`: A valid [tz database time zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
-        (default: `UTC`)
+        (default: `Etc/UTC`)
     *  `GITLAB_SHELL_SSH_PORT`: GitLab Shell SSH port (default: `10022`)
     *  `GL_INITIAL_ROOT_PASSWORD`: Initial default admin password (default:
         `password`)
@@ -86,7 +86,7 @@ The following is required:
 1.  Optional: Set these environment variables in 'docker-compose.yml':
     *  Uncomment line 69 if you have set
        `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN` in step 4.
-    *  Uncomment line 118 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
+    *  Uncomment line 119 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
        step 4.
 1.  Start the container in detached mode:  
     ```bash
@@ -153,7 +153,7 @@ Add Mattermost to Applications:
 ## Register shared Runners
 
 ```shell
-docker exec -ti vcs_gitlab-runner_1 bash -c "gitlab-runner register"
+docker exec -ti vcs-gitlab-runner-1 bash -c "gitlab-runner register"
 ```
 
 1.  Enter your GitLab instance URL:
@@ -196,7 +196,7 @@ See also
 ### GitLab
 
 *  [Omnibus GitLab Docs](https://docs.gitlab.com/omnibus/)
-    *  [Setting up LDAP sign-in](https://docs.gitlab.com/ce/administration/auth/ldap/index.html)
+    *  [Setting up LDAP sign-in](https://docs.gitlab.com/ee/administration/auth/ldap/index.html)
     *  [SMTP settings](https://docs.gitlab.com/omnibus/settings/smtp.html)  
         → As long as you are using the exim-relay, emails will likely end up in
         your spam folder!

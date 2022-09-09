@@ -210,3 +210,7 @@ See also
 *  [Mattermost Overview](https://docs.mattermost.com/overview/index.html)
     *  [Administration Guide](https://docs.mattermost.com/guides/administration.html)
     *  [User Guide](https://docs.mattermost.com/guides/channels.html)
+
+## License
+
+[MIT](LICENSE) © 2019 b-data GmbH

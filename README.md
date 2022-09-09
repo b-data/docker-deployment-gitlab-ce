@@ -211,6 +211,14 @@ See also
     *  [Administration Guide](https://docs.mattermost.com/guides/administration.html)
     *  [User Guide](https://docs.mattermost.com/guides/channels.html)
 
+## Contributing
+
+PRs accepted.
+
+This project follows the
+[Contributor Covenant](https://www.contributor-covenant.org)
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 [MIT](LICENSE) © 2019 b-data GmbH

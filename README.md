@@ -1,4 +1,4 @@
-<a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a> <a href="https://benz0li.b-data.io/donate?project=2"><img src="https://benz0li.b-data.io/donate/static/donate-with-fosspay.png" alt="Donate with fosspay"></a>
+[![minimal-readme compliant](https://img.shields.io/badge/readme%20style-minimal-brightgreen.svg)](https://github.com/RichardLitt/standard-readme/blob/master/example-readmes/minimal-readme.md) [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) <a href="https://liberapay.com/benz0li/donate"><img src="https://liberapay.com/assets/widgets/donate.svg" alt="Donate using Liberapay" height="20"></a> <a href="https://benz0li.b-data.io/donate?project=2"><img src="https://benz0li.b-data.io/donate/static/donate-with-fosspay.png" alt="Donate with fosspay"></a>
 
 # GitLab Community Edition (CE)
 
@@ -14,7 +14,7 @@ services in a single container.
 *  GitLab CE with Mattermost Team Edition (TE) and Container Registry enabled.
     *  Disabled: LDAP, Reply by email and Gitlab Pages
     *  Includes [gitlab-runner](https://hub.docker.com/r/gitlab/gitlab-runner)
-       to register shared Runners.
+       to register shared runners.
 *  Pre-configured to run at subdomains of your **own domain**:
     *  GitLab: gitlab.mydomain.com
     *  Mattermost: mattermost.mydomain.com
@@ -30,12 +30,19 @@ services in a single container.
 *  Homepage: https://about.gitlab.com
 *  Documentation: https://docs.gitlab.com/omnibus/docker/
 
+## Table of Contents
+
+*  [Prerequisites](#prerequisites)
+*  [Install](#install)
+*  [Usage](#usage)
+*  [Further reading](#further-reading)
+*  [Contributing](#contributing)
+*  [License](#license)
+
 ## Prerequisites
 
 The following is required:
 
-*  A [Docker Deployment](https://gitlab.com/b-data/docker/deployments) of
-   [Træfik](https://gitlab.com/b-data/docker/deployments/traefik).
 *  DNS records for all subdomains pointing to this host.
 *  Allowing connections on port 10022 to access GitLab shell (Git over SSH).
 
@@ -48,7 +55,15 @@ The following is required:
 *  **Memory:** **4 GB RAM** is the **required** minimum memory size and supports up
    to 500 users
 
-## Setup
+## Install
+
+This project depends on the following
+[Docker Deployment](https://gitlab.com/b-data/docker/deployments):
+
+*  [Træfik](https://gitlab.com/b-data/docker/deployments/traefik): TLS termination,
+   reverse proxy
+
+## Usage
 
 1.  Create an external docker network named "vcs":  
     ```bash
@@ -150,7 +165,7 @@ Add Mattermost to Applications:
 1. Wait until GitLab container is ready again.
 1. Log into https://mattermost.mydomain.com using "GitLab Single Sign-On".
 
-## Register shared Runners
+### Register shared runners
 
 ```shell
 docker exec -ti vcs-gitlab-runner-1 bash -c "gitlab-runner register"

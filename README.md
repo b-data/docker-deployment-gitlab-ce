@@ -101,7 +101,7 @@ This project depends on the following
 1.  Optional: Set these environment variables in 'docker-compose.yml':
     *  Uncomment line 69 if you have set
        `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN` in step 4.
-    *  Uncomment line 119 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
+    *  Uncomment line 120 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
        step 4.
 1.  Start the container in detached mode:  
     ```bash

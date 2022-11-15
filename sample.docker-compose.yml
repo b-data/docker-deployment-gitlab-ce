@@ -87,6 +87,7 @@ services:
         gitlab_rails['registry_enabled'] = true
 
         ## GitLab NGINX
+        #nginx['listen_addresses'] = ['0.0.0.0', '[::]']
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
         nginx['proxy_set_headers'] = {
@@ -137,6 +138,7 @@ services:
 
         ## Mattermost NGINX
         mattermost_nginx['enable'] = true
+        #mattermost_nginx['listen_addresses'] = ['*', '[::]']
         mattermost_nginx['listen_port'] = 80
         mattermost_nginx['listen_https'] = false
         mattermost_nginx['proxy_set_headers'] = {
@@ -149,6 +151,7 @@ services:
 
         ## Registry NGINX
         registry_nginx['enable'] = true
+        #registry_nginx['listen_addresses'] = ['*', '[::]']
         registry_nginx['listen_port'] = 80
         registry_nginx['listen_https'] = false
         registry_nginx['proxy_set_headers'] = {

@@ -18,7 +18,7 @@ services in a single container.
 *  Pre-configured to run at subdomains of your **own domain**:
     *  GitLab: gitlab.mydomain.com
     *  Mattermost: mattermost.mydomain.com
-    *  Registry: registry.gitlab.mydomain.com
+    *  Container Registry: glcr.mydomain.com
 *  Exposes GitLab shell on port 10022 by default.
 *  Sends emails through an
    [exim-relay](https://hub.docker.com/r/devture/exim-relay) container by

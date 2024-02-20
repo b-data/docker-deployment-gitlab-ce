@@ -20,11 +20,9 @@ services:
       - traefik.http.routers.gitlab.entrypoints=web
       - traefik.http.routers.gitlab.rule=Host(`gitlab.${GL_DOMAIN}`,`mattermost.${GL_DOMAIN}`,`glcr.${GL_DOMAIN}`)
       - traefik.http.routers.gitlab.middlewares=http2https@file
-      #- traefik.http.routers.gitlab.service=gitlab
       - traefik.http.routers.gitlab-sec.entrypoints=websecure
       - traefik.http.routers.gitlab-sec.rule=Host(`gitlab.${GL_DOMAIN}`,`mattermost.${GL_DOMAIN}`,`glcr.${GL_DOMAIN}`)
       - traefik.http.routers.gitlab-sec.middlewares=sts@file
-      #- traefik.http.routers.gitlab-sec.service=gitlab
       - traefik.http.routers.gitlab-sec.tls.certresolver=${GL_CERTRESOLVER_NAME}
     environment:
       GITLAB_OMNIBUS_CONFIG: |

@@ -6,7 +6,9 @@
 
 [This project](https://gitlab.com/b-data/docker/deployments/gitlab-ce) serves as
 a template to run [gitlab-ce](https://hub.docker.com/r/gitlab/gitlab-ce) in a
-docker container using docker compose.
+docker container using docker compose.  
+ℹ️ For GitLab on a cloud k8s environment, see GitLab's
+[Cloud Native Hybrid reference architectures](https://docs.gitlab.com/ee/administration/reference_architectures/#cloud-native-hybrid).
 
 The docker image is a monolithic image of GitLab running all the necessary
 services in a single container.

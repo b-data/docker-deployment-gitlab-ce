@@ -8,9 +8,9 @@ services:
     ports:
       - "${GITLAB_SHELL_SSH_PORT:-10022}:22"
     volumes:
-      - ${GL_HOME:-.}/gitlab/config:/etc/gitlab
-      - ${GL_HOME:-.}/gitlab/logs:/var/log/gitlab
-      - ${GL_HOME:-.}/gitlab/data:/var/opt/gitlab
+      - ${GL_HOME:-$PWD}/gitlab/config:/etc/gitlab
+      - ${GL_HOME:-$PWD}/gitlab/logs:/var/log/gitlab
+      - ${GL_HOME:-$PWD}/gitlab/data:/var/opt/gitlab
     labels:
       - traefik.enable=true
       - traefik.docker.network=webproxy
@@ -81,6 +81,9 @@ services:
 
         ### Settings used by GitLab application
         gitlab_rails['registry_enabled'] = true
+
+        ## GitLab PostgreSQL
+        postgresql['shared_buffers'] = "256MB"
 
         ## GitLab NGINX
         #nginx['listen_addresses'] = ['0.0.0.0', '[::]']
@@ -162,7 +165,7 @@ services:
     image: gitlab/gitlab-runner
     restart: always
     volumes:
-      - ${GL_HOME:-.}/gitlab-runner/config:/etc/gitlab-runner
+      - ${GL_HOME:-$PWD}/gitlab-runner/config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
 
   gitlab-smtp:

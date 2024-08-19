@@ -82,6 +82,9 @@ services:
         ### Settings used by GitLab application
         gitlab_rails['registry_enabled'] = true
 
+        ## GitLab PostgreSQL
+        postgresql['shared_buffers'] = "256MB"
+
         ## GitLab NGINX
         #nginx['listen_addresses'] = ['0.0.0.0', '[::]']
         nginx['listen_port'] = 80

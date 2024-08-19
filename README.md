@@ -105,9 +105,9 @@ This project depends on the following
           LC_ALL=C tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
 
 1. Optional: Set these environment variables in 'docker-compose.yml':
-    * Uncomment line 69 if you have set
+    * Uncomment line 65 if you have set
       `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN` in step 4.
-    * Uncomment line 120 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
+    * Uncomment line 119 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
       step 4.
 1. Start the container in detached mode:  
 

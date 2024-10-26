@@ -16,10 +16,10 @@ services:
       - traefik.docker.network=webproxy
       - traefik.http.services.gitlab.loadbalancer.server.port=80
       - traefik.http.routers.gitlab.entrypoints=web
-      - traefik.http.routers.gitlab.rule=Host(`gitlab.${GL_DOMAIN}`,`mattermost.${GL_DOMAIN}`,`glcr.${GL_DOMAIN}`)
+      - traefik.http.routers.gitlab.rule=Host(`gitlab.${GL_DOMAIN}`) || Host(`mattermost.${GL_DOMAIN}`) || Host(`glcr.${GL_DOMAIN}`)
       - traefik.http.routers.gitlab.middlewares=http2https@file
       - traefik.http.routers.gitlab-sec.entrypoints=websecure
-      - traefik.http.routers.gitlab-sec.rule=Host(`gitlab.${GL_DOMAIN}`,`mattermost.${GL_DOMAIN}`,`glcr.${GL_DOMAIN}`)
+      - traefik.http.routers.gitlab-sec.rule=Host(`gitlab.${GL_DOMAIN}`) || Host(`mattermost.${GL_DOMAIN}`) || Host(`glcr.${GL_DOMAIN}`)
       - traefik.http.routers.gitlab-sec.middlewares=sts@file
       - traefik.http.routers.gitlab-sec.tls.certresolver=${GL_CERTRESOLVER_NAME}
     environment:

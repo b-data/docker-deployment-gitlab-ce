@@ -43,13 +43,13 @@ services:
         ### Reply by email
         #gitlab_rails['incoming_email_enabled'] = true
         #### Incoming Email Address
-        #gitlab_rails['incoming_email_address'] = "gitlab-incoming+%{key}@gmail.com"
+        #gitlab_rails['incoming_email_address'] = "gitlab+%{key}@${GL_DOMAIN}"
         #### Email account username
-        #gitlab_rails['incoming_email_email'] = "gitlab-incoming@gmail.com"
+        #gitlab_rails['incoming_email_email'] = "gitlab@${GL_DOMAIN}"
         #### Email account password
         #gitlab_rails['incoming_email_password'] = "[REDACTED]"
         #### IMAP Settings
-        #gitlab_rails['incoming_email_host'] = "imap.gmail.com"
+        #gitlab_rails['incoming_email_host'] = "imap.${GL_DOMAIN}"
         #gitlab_rails['incoming_email_port'] = 993
         #gitlab_rails['incoming_email_ssl'] = true
         #gitlab_rails['incoming_email_start_tls'] = false
@@ -66,7 +66,7 @@ services:
 
         ### GitLab email server settings
         gitlab_rails['smtp_enable'] = true
-        gitlab_rails['smtp_address'] = "${GL_SMTP_ADDRESS:-gitlab-smtp}"
+        gitlab_rails['smtp_address'] = "${GL_SMTP_ADDRESS:-smtp}"
         gitlab_rails['smtp_port'] = ${GL_SMTP_PORT:-8025}
         #gitlab_rails['smtp_user_name'] = "gitlab@${GL_DOMAIN}"
         #gitlab_rails['smtp_password'] = "${GL_SMTP_PASSWORD}"
@@ -97,6 +97,11 @@ services:
           "X-Forwarded-Ssl" => "on"
         }
 
+        ## GitLab Kubernetes Agent Server
+        gitlab_kas['env'] = {
+          'OWN_PRIVATE_API_URL' => 'grpc://127.0.0.1:8155'
+        }
+
         ## GitLab Mattermost
         mattermost_external_url 'https://mattermost.${GL_DOMAIN}'
         mattermost['enable'] = true
@@ -104,36 +109,37 @@ services:
         mattermost['gitlab_enable'] = true
         mattermost['gitlab_id'] = "${MM_GITLAB_APPLICATION_ID}"
         mattermost['gitlab_secret'] = "${MM_GITLAB_SECRET}"
+        mattermost['gitlab_scope'] = "read_user"
         mattermost['gitlab_auth_endpoint'] = "https://gitlab.${GL_DOMAIN}/oauth/authorize"
         mattermost['gitlab_token_endpoint'] = "https://gitlab.${GL_DOMAIN}/oauth/token"
         mattermost['gitlab_user_api_endpoint'] = "https://gitlab.${GL_DOMAIN}/api/v4/user"
         mattermost['env'] = {
-                            'MM_SERVICESETTINGS_SITEURL' => 'https://mattermost.${GL_DOMAIN}',
-                            'MM_SERVICESETTINGS_ENABLEINCOMINGWEBHOOKS' => 'true',
-                            'MM_SERVICESETTINGS_ENABLEPOSTUSERNAMEOVERRIDE' => 'true',
-                            'MM_SERVICESETTINGS_ENABLEPOSTICONOVERRIDE' => 'true',
-                            'MM_SERVICESETTINGS_ENABLELINKPREVIEWS' => 'true',
-                            'MM_SERVICESETTINGS_ENABLEUSERACCESSTOKENS' => 'true',
-                            'MM_TEAMSETTINGS_TEAMMATENAMEDISPLAY' => 'full_name',
-                            'MM_FILESETTINGS_ENABLEPUBLICLINK' => 'true',
-                            #'MM_FILESETTINGS_PUBLICLINKSALT' => '${MM_PUBLIC_LINK_SALT}',
-                            'MM_EMAILSETTINGS_ENABLESIGNUPWITHEMAIL' => 'false',
-                            'MM_EMAILSETTINGS_ENABLESIGNINWITHEMAIL' => 'false',
-                            'MM_EMAILSETTINGS_ENABLESIGNINWITHUSERNAME' => 'false',
-                            'MM_EMAILSETTINGS_SENDEMAILNOTIFICATIONS' => 'true',
-                            'MM_EMAILSETTINGS_FEEDBACKNAME' => 'GitLab Mattermost Notification',
-                            'MM_EMAILSETTINGS_FEEDBACKEMAIL' => 'gitlab@${GL_DOMAIN}',
-                            'MM_EMAILSETTINGS_REPLYTOADDRESS' => 'noreply@${GL_DOMAIN}',
-                            #'MM_EMAILSETTINGS_FEEDBACKORGANIZATION' => '© Company, Address No., Zip City',
-                            #'MM_EMAILSETTINGS_ENABLESMTPAUTH' => 'true',
-                            #'MM_EMAILSETTINGS_SMTPUSERNAME' => 'gitlab@${GL_DOMAIN}',
-                            #'MM_EMAILSETTINGS_SMTPPASSWORD' => '${GL_SMTP_PASSWORD}',
-                            'MM_EMAILSETTINGS_SMTPSERVER' => '${GL_SMTP_ADDRESS:-gitlab-smtp}',
-                            'MM_EMAILSETTINGS_SMTPPORT' => '${GL_SMTP_PORT:-8025}',
-                            #'MM_EMAILSETTINGS_CONNECTIONSECURITY' => 'STARTTLS',
-                            'MM_SUPPORTSETTINGS_SUPPORTEMAIL' => 'support@${GL_DOMAIN}',
-                            'MM_PLUGINSETTINGS_ENABLEUPLOADS' => 'true',
-                            }
+          'MM_SERVICESETTINGS_SITEURL' => 'https://mattermost.${GL_DOMAIN}',
+          'MM_SERVICESETTINGS_ENABLEINCOMINGWEBHOOKS' => 'true',
+          'MM_SERVICESETTINGS_ENABLEPOSTUSERNAMEOVERRIDE' => 'true',
+          'MM_SERVICESETTINGS_ENABLEPOSTICONOVERRIDE' => 'true',
+          'MM_SERVICESETTINGS_ENABLELINKPREVIEWS' => 'true',
+          'MM_SERVICESETTINGS_ENABLEUSERACCESSTOKENS' => 'true',
+          'MM_TEAMSETTINGS_TEAMMATENAMEDISPLAY' => 'full_name',
+          'MM_FILESETTINGS_ENABLEPUBLICLINK' => 'true',
+          #'MM_FILESETTINGS_PUBLICLINKSALT' => '${MM_PUBLIC_LINK_SALT}',
+          'MM_EMAILSETTINGS_ENABLESIGNUPWITHEMAIL' => 'false',
+          'MM_EMAILSETTINGS_ENABLESIGNINWITHEMAIL' => 'false',
+          'MM_EMAILSETTINGS_ENABLESIGNINWITHUSERNAME' => 'false',
+          'MM_EMAILSETTINGS_SENDEMAILNOTIFICATIONS' => 'true',
+          'MM_EMAILSETTINGS_FEEDBACKNAME' => 'GitLab Mattermost Notification',
+          'MM_EMAILSETTINGS_FEEDBACKEMAIL' => 'gitlab@${GL_DOMAIN}',
+          'MM_EMAILSETTINGS_REPLYTOADDRESS' => 'noreply@${GL_DOMAIN}',
+          #'MM_EMAILSETTINGS_FEEDBACKORGANIZATION' => '© Company, Address No., Zip City',
+          #'MM_EMAILSETTINGS_ENABLESMTPAUTH' => 'true',
+          #'MM_EMAILSETTINGS_SMTPUSERNAME' => 'gitlab@${GL_DOMAIN}',
+          #'MM_EMAILSETTINGS_SMTPPASSWORD' => '${GL_SMTP_PASSWORD}',
+          'MM_EMAILSETTINGS_SMTPSERVER' => '${GL_SMTP_ADDRESS:-smtp}',
+          'MM_EMAILSETTINGS_SMTPPORT' => '${GL_SMTP_PORT:-8025}',
+          #'MM_EMAILSETTINGS_CONNECTIONSECURITY' => 'STARTTLS',
+          'MM_SUPPORTSETTINGS_SUPPORTEMAIL' => 'support@${GL_DOMAIN}',
+          'MM_PLUGINSETTINGS_ENABLEUPLOADS' => 'true',
+        }
 
         ## Mattermost NGINX
         mattermost_nginx['enable'] = true
@@ -164,14 +170,18 @@ services:
   gitlab-runner:
     image: gitlab/gitlab-runner
     restart: always
+    networks:
+      - vcs
     volumes:
       - ${GL_HOME:-.}/gitlab-runner/config:/etc/gitlab-runner
       - /var/run/docker.sock:/var/run/docker.sock
 
-  gitlab-smtp:
+  smtp:
     image: devture/exim-relay:4.92.2-r0-0
     user: 100:101
     restart: always
+    networks:
+      - vcs
 
 networks:
   vcs:

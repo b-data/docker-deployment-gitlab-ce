@@ -96,7 +96,7 @@ This project depends on the following
           LC_ALL=C tr -cd 'A-Za-z0-9' < /dev/urandom | fold -w 20 | head -n 1
 
     * `GL_SMTP_PASSWORD`: SMTP server password (disabled)
-    * `GL_SMTP_ADDRESS`: SMTP server address (default: `gitlab-smtp`)
+    * `GL_SMTP_ADDRESS`: SMTP server address (default: `smtp`)
     * `GL_SMTP_PORT`: SMTP server port (default: `8025`)
     * `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (default: set by
       GitLab)  

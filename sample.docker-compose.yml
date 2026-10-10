@@ -82,6 +82,11 @@ services:
         ### Settings used by GitLab application
         gitlab_rails['registry_enabled'] = true
 
+        ### Registry database
+        registry['database'] = {
+          'enabled' => true,
+        }
+
         ## GitLab PostgreSQL
         postgresql['shared_buffers'] = "256MB"
 

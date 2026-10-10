@@ -11,17 +11,24 @@ docker container using docker compose.
 [Cloud Native Hybrid reference architectures](https://docs.gitlab.com/ee/administration/reference_architectures/#cloud-native-hybrid).
 
 The docker image is a monolithic image of GitLab running all the necessary
-services in a single container.
+services in a single container. Mattermost has been deprecated from the GitLab
+Omnibus package with v19.0.
+
+> If you currently use Mattermost bundled with GitLab, refer to
+> [Migrating from GitLab Omnibus to Mattermost Standalone](https://docs.mattermost.com/administration-guide/onboard/migrate-gitlab-omnibus.html)
+> in the Mattermost documentation for migration instructions and available
+> Mattermost editions.
+
+– [Deprecations and removals by version | GitLab Docs](https://docs.gitlab.com/update/deprecations/#mattermost-bundled-with-linux-package)
 
 Features:
 
-* GitLab CE with Mattermost Team Edition (TE) and Container Registry enabled.
+* GitLab CE with Container Registry enabled.
   * Disabled: LDAP, Reply by email and Gitlab Pages
   * Includes [gitlab-runner](https://hub.docker.com/r/gitlab/gitlab-runner) to
     register shared runners.
 * Pre-configured to run at subdomains of your **own domain**:
   * GitLab: gitlab.mydomain.com
-  * Mattermost: mattermost.mydomain.com
   * Container Registry: glcr.mydomain.com
 * Exposes GitLab shell on port 10022 by default.
 * Sends emails through an
@@ -98,17 +105,10 @@ This project depends on the following
     * `GL_SMTP_PASSWORD`: SMTP server password (disabled)
     * `GL_SMTP_ADDRESS`: SMTP server address (default: `smtp`)
     * `GL_SMTP_PORT`: SMTP server port (default: `8025`)
-    * `MM_PUBLIC_LINK_SALT`: Mattermost Public Link Salt (default: set by
-      GitLab)  
-      Generate random salt:  
-
-          LC_ALL=C tr -cd 'a-z0-9' < /dev/urandom | fold -w 32 | head -n 1
 
 1. Optional: Set these environment variables in 'docker-compose.yml':
     * Uncomment line 65 if you have set
       `GL_INITIAL_SHARED_RUNNERS_REGISTRATION_TOKEN` in step 4.
-    * Uncomment line 119 if you have set `MM_FILESETTINGS_PUBLICLINKSALT` in
-      step 4.
 1. Start the container in detached mode:  
 
        docker compose up -d
@@ -141,33 +141,6 @@ Change the following settings:
   * Tick "Allow requests to the local network from web hooks and services"
 * Admin Area > Settings > Preferences > Email:
   * Untick "Enable in-product marketing emails"
-
-Add Mattermost to Applications:
-
-* Admin Area > Applications: Click "New application"
-  * Name: GitLab Mattermost
-  * Redirect URL:
-
-        https://mattermost.mydomain.com/signup/gitlab/complete
-        https://mattermost.mydomain.com/login/gitlab/complete
-
-    → Replace `mydomain.com` with your own domain that serves the subdomains.
-    * Tick "Trusted"
-    * Scopes:
-      * Tick "api"
-* Click "Submit" and copy "Application ID" and "Secret"
-
-### Mattermost
-
-1. Set the following environment variables in '.env':
-    * `MM_GITLAB_APPLICATION_ID`: "Application ID" from GitLab
-    * `MM_GITLAB_SECRET`: "Secret" from GitLab
-1. Reconfigure GitLab:  
-
-       docker compose up -d
-
-1. Wait until GitLab container is ready again.
-1. Log into <https://mattermost.mydomain.com> using "GitLab Single Sign-On".
 
 ### Register shared runners
 
@@ -223,12 +196,6 @@ GitLab:
   * [GitLab Pages administration](https://docs.gitlab.com/ee/administration/pages/)
 * [GitLab Runner Docs](https://docs.gitlab.com/runner/)
   * [Advanced configuration](https://docs.gitlab.com/runner/configuration/advanced-configuration.html)
-
-Mattermost:
-
-* [Mattermost Overview](https://docs.mattermost.com/overview/index.html)
-  * [Administration Guide](https://docs.mattermost.com/guides/administration.html)
-  * [User Guide](https://docs.mattermost.com/guides/channels.html)
 
 ## Contributing
 
